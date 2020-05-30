@@ -8,7 +8,7 @@ NIC_IP_FILE=$WORKDIR/eth0.txt
 FIP_FILE=$WORKDIR/fip.txt
 IGNORE_FILE=$WORKDIR/ignore.tmp.txt
 DELETE_FILE=$WORKDIR/delete.tmp.txt
-ADD_FIEL=$WORKDIR/add.tmp.txt
+ADD_FILE=$WORKDIR/add.tmp.txt
 
 if ! [ -x "$(command -v hcloud)" ]; then
     echo "hcloud is not installed"
@@ -26,7 +26,7 @@ echo "$FIPS" | xargs -n 1 -I '{}' echo "{}/32" >> $FIP_FILE
 
 grep -Ff $NIC_IP_FILE $FIP_FILE > $IGNORE_FILE
 grep -v -f $IGNORE_FILE $NIC_IP_FILE > $DELETE_FILE
-grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FIEL
+grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FILE
 
 if [ -s "$DELETE_FILE" ] 
 then
@@ -34,10 +34,10 @@ then
     cat $DELETE_FILE | xargs -n 1 -I '{}' ip addr delete {} dev $NIC
 fi
 
-if [ -s "$ADD_FIEL" ] 
+if [ -s "$ADD_FILE" ] 
 then
     echo "add:"
-    cat $ADD_FIEL | xargs -n 1 -I '{}' ip addr add {} dev $NIC
+    cat $ADD_FILE | xargs -n 1 -I '{}' ip addr add {} dev $NIC
 fi
 
 # cleanup
