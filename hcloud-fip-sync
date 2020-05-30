@@ -1,6 +1,6 @@
 #! /bin/bash
 
-WORKDIR=/tmp
+WORKDIR=$(mktemp -d)
 NIC=eth0
 HOSTNAME=$(hostname)
 
@@ -28,16 +28,14 @@ grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FIEL
 if [ -s "$DELETE_FILE" ] 
 then
     echo "delete:"
-    cat $DELETE_FILE | xargs -n 1 ip addr delete$1
+    cat $DELETE_FILE | xargs -n 1 echo "ip addr delete$1 dev $NIC"
 fi
 
 if [ -s "$ADD_FIEL" ] 
 then
     echo "add:"
-    cat $ADD_FIEL | xargs -n 1 ip addr add$1
+    cat $ADD_FIEL | xargs -n 1 echo "ip addr add$1 dev $NIC"
 fi
 
 # cleanup
-rm $WORKDIR/ignore.tmp.txt
-rm $WORKDIR/delete.tmp.txt
-rm $WORKDIR/add.tmp.txt
+rm -rf $WORKDIR
