@@ -1,0 +1,9 @@
+[Unit]
+Description=hcloud floating-ip sync service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/hcloud-fip-sync
+
+[Install]
+WantedBy=multi-user.target

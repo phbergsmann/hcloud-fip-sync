@@ -1,0 +1,8 @@
+[Unit]
+Description=hcloud floating-ip sync timer
+
+[Timer]
+OnCalendar=*-*-* *:1:0
+
+[Install]
+WantedBy=timers.target

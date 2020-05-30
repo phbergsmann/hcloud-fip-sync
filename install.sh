@@ -17,4 +17,9 @@ if ! [ -x "$(command -v hcloud-fip-sync)" ]; then
     curl -Lo hcloud-fip-sync.tar.gz https://github.com/phbergsmann/hcloud-fip-sync/releases/download/$HCLOUD_FIP_SYNC_VERSION/hcloud-fip-sync.tar.gz
     tar -xzvf hcloud-fip-sync.tar.gz
     mv hcloud-fip-sync /usr/bin/
+    mv hcloud-fip-sync.service /etc/systemd/system/
+    mv hcloud-fip-sync.timer /etc/systemd/system/
+
+    systemctl enable hcloud-fip-sync.timer
+    systemctl restart hcloud-fip-sync.timer
 fi
