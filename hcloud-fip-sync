@@ -31,14 +31,14 @@ grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FIEL
 if [ -s "$DELETE_FILE" ] 
 then
     echo "delete:"
-    cat $DELETE_FILE | xargs -n 1 -I '{}' echo "ip addr delete {} dev $NIC"
+    cat $DELETE_FILE | xargs -n 1 -I '{}' ip addr delete {} dev $NIC
 fi
 
 if [ -s "$ADD_FIEL" ] 
 then
     echo "add:"
-    cat $ADD_FIEL | xargs -n 1 -I '{}' echo "ip addr add {} dev $NIC"
+    cat $ADD_FIEL | xargs -n 1 -I '{}' ip addr add {} dev $NIC
 fi
 
 # cleanup
-#rm -rf $WORKDIR
+rm -rf $WORKDIR
