@@ -15,6 +15,8 @@ if ! [ -x "$(command -v hcloud)" ]; then
     exit 1
 fi
 
+echo "using workdir: $WORKDIR"
+
 # export ips of eth0
 ip addr show $NIC | awk '$1 == "inet" {print $2}' | tail -n +2 > $NIC_IP_FILE
 
@@ -39,4 +41,4 @@ then
 fi
 
 # cleanup
-rm -rf $WORKDIR
+#rm -rf $WORKDIR
