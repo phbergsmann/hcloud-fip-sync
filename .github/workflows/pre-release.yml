@@ -15,7 +15,7 @@ jobs:
 
     - name: Build project
       run: |
-        tar -czvf hcloud-fip-sync.tar.gz hcloud-fip-sync
+        tar -czvf hcloud-fip-sync.tar.gz hcloud-fip-sync*
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
