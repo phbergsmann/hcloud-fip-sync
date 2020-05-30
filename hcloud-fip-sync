@@ -19,7 +19,8 @@ fi
 ip addr show $NIC | awk '$1 == "inet" {print $2}' | tail -n +2 > $NIC_IP_FILE
 
 # get ips from hcloud
-hcloud floating-ip list -o noheader -o columns=ip -l server=$HOSTNAME > $FIP_FILE
+FIPS=$(hcloud floating-ip list -o noheader -o columns=ip -l server=$HOSTNAME) \
+echo $FIPS | xargs -n 1 -I '{}' echo "{}/32" >> $FIP_FILE
 
 grep -Ff $NIC_IP_FILE $FIP_FILE > $IGNORE_FILE
 grep -v -f $IGNORE_FILE $NIC_IP_FILE > $DELETE_FILE
@@ -28,13 +29,13 @@ grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FIEL
 if [ -s "$DELETE_FILE" ] 
 then
     echo "delete:"
-    cat $DELETE_FILE | xargs -n 1 echo "ip addr delete$1 dev $NIC"
+    cat $DELETE_FILE | xargs -n 1 -I '{}' echo "ip addr delete {} dev $NIC"
 fi
 
 if [ -s "$ADD_FIEL" ] 
 then
     echo "add:"
-    cat $ADD_FIEL | xargs -n 1 echo "ip addr add$1 dev $NIC"
+    cat $ADD_FIEL | xargs -n 1 -I '{}' echo "ip addr add {} dev $NIC"
 fi
 
 # cleanup
