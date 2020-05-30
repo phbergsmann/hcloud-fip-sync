@@ -1,0 +1,43 @@
+#! /bin/bash
+
+WORKDIR=/tmp
+NIC=eth0
+HOSTNAME=$(hostname)
+
+NIC_IP_FILE=$WORKDIR/eth0.txt
+FIP_FILE=$WORKDIR/fip.txt
+IGNORE_FILE=$WORKDIR/ignore.tmp.txt
+DELETE_FILE=$WORKDIR/delete.tmp.txt
+ADD_FIEL=$WORKDIR/add.tmp.txt
+
+if ! [ -x "$(command -v hcloud)" ]; then
+    echo "hcloud is not installed"
+    exit 1
+fi
+
+# export ips of eth0
+ip addr show $NIC | awk '$1 == "inet" {print $2}' | tail -n +2 > $NIC_IP_FILE
+
+# get ips from hcloud
+hcloud floating-ip list -o noheader -o columns=ip -l server=$HOSTNAME > $FIP_FILE
+
+grep -Ff $NIC_IP_FILE $FIP_FILE > $IGNORE_FILE
+grep -v -f $IGNORE_FILE $NIC_IP_FILE > $DELETE_FILE
+grep -v -f $IGNORE_FILE $FIP_FILE > $ADD_FIEL
+
+if [ -s "$DELETE_FILE" ] 
+then
+    echo "delete:"
+    cat $DELETE_FILE | xargs -n 1 ip addr delete$1
+fi
+
+if [ -s "$ADD_FIEL" ] 
+then
+    echo "add:"
+    cat $ADD_FIEL | xargs -n 1 ip addr add$1
+fi
+
+# cleanup
+rm $WORKDIR/ignore.tmp.txt
+rm $WORKDIR/delete.tmp.txt
+rm $WORKDIR/add.tmp.txt
