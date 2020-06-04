@@ -3,7 +3,7 @@
 WORKDIR=$(mktemp -d)
 NIC=eth0
 HOSTNAME=$(hostname)
-HCLOUD_TOKEN=$(cat /etc/hcloud.token)
+export HCLOUD_TOKEN=$(cat /etc/hcloud.token)
 
 NIC_IP_FILE=$WORKDIR/eth0.txt
 FIP_FILE=$WORKDIR/fip.txt
