@@ -22,7 +22,7 @@ echo "using workdir: $WORKDIR"
 ip addr show $NIC | awk '$1 == "inet" {print $2}' | tail -n +2 > $NIC_IP_FILE
 
 # get ips from hcloud
-FIPS=$(hcloud floating-ip list -o noheader -o columns=ip -l server=$HOSTNAME)
+FIPS=$(hcloud floating-ip list -o noheader -o columns=ip -l autosync=true)
 echo "$FIPS" | xargs -n 1 -I '{}' echo "{}/32" >> $FIP_FILE
 
 grep -Ff $NIC_IP_FILE $FIP_FILE > $IGNORE_FILE
